@@ -1,0 +1,97 @@
+<html>
+<head>
+<title>Campaign Expenditures</title>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="campaignsJS.js"></script>
+<script src="expend_data.json"></script>
+<script src="features.json"></script>
+<script src="candidateSums.json"></script>
+<script src="https://npmcdn.com/simple-statistics@2.0.0/dist/simple-statistics.min.js"></script>
+<link rel="stylesheet" type="text/css" href="campaignsCSS.css">
+<script src="http://ils.unc.edu/~gotz/courses/js/gotz-d3-tip.js"></script>
+<link rel="stylesheet" type="text/css" href="http://ils.unc.edu/~gotz/courses/js/d3-tip.css"/>
+</head>
+<body>
+<h1>2016 Presidential Campaign Expenditures</h1>
+	<div id="boxesContainer">
+	<fieldset id="republicanBoxes" class="boxes">
+	<h3>Republican Party</h3>
+	<input type="checkbox" id = "Trump, Donald J." value="Trump, Donald J." class="renderBox" onchange="candidateProcessor();justChecked(this.value);";><label>Trump</label>
+	<input type="checkbox" id ="Kasich, John R." value="Kasich, John R." class="renderBox" onchange="candidateProcessor();justChecked(this.value);"><label>Kasich</label>
+	<input type="checkbox" id="Rubio, Marco" value="Rubio, Marco" class="renderBox" onchange="candidateProcessor();justChecked(this.value);"><label>Rubio</label>
+	<input type="checkbox" value="Walker, Scott" class="renderBox" onchange="candidateProcessor();justChecked(this.value);"><label>Walker</label>
+	<input type="checkbox" value="Huckabee, Mike" class="renderBox" onchange="candidateProcessor();justChecked(this.value);"><label>Huckabee</label>
+	<input type="checkbox" value="Graham, Lindsey O." class="renderBox" onchange="candidateProcessor();justChecked(this.value);"><label>Graham</label>
+	<input type="checkbox" value="Paul, Rand" class="renderBox" onchange="candidateProcessor();justChecked(this.value);"><label>Paul</label>
+	<input type="checkbox" value="Santorum, Richard J." class="renderBox" onchange="candidateProcessor();justChecked(this.value);"><label>Santorum</label>
+	<input type="checkbox" value="Cruz, Rafael Edward 'Ted'" class="renderBox" onchange="candidateProcessor();justChecked(this.value);"><label>Cruz</label>
+	<input type="checkbox" value="Jindal, Bobby" class="renderBox" onchange="candidateProcessor();justChecked(this.value);"><label>Jindal</label>
+	<input type="checkbox" value="Pataki, George E." class="renderBox" onchange="candidateProcessor();justChecked(this.value);"><label>Pataki</label>
+	<input type="checkbox" value="Fiorina, Carly" class="renderBox" onchange="candidateProcessor();justChecked(this.value);"><label>Fiorina</label>
+	<input type="checkbox" value="Carson, Benjamin S." class="renderBox" onchange="candidateProcessor();justChecked(this.value);"><label>Carson</label>
+	<input type="checkbox" value="Gilmore, James S III" class="renderBox" onchange="candidateProcessor();justChecked(this.value);"><label>Gilmore</label>
+	<input type="checkbox" value="Christie, Christopher J." class="renderBox" onchange="candidateProcessor();justChecked(this.value);"><label>Christie</label>
+	<input type="checkbox" value="Perry, James R. (Rick)" class="renderBox" onchange="candidateProcessor();justChecked(this.value);"><label>Perry</label>
+	<input type="checkbox" value="Bush, Jeb" class="renderBox" onchange="candidateProcessor();justChecked(this.value);"><label>Bush</label>
+	</fieldset>
+	<div id="subBoxes">
+	<fieldset id="democraticBoxes" class="boxes">
+	<h3>Democratic Party</h3>
+	<input type="checkbox" value="Clinton, Hillary Rodham" class="renderBox" onchange="candidateProcessor();justChecked(this.value);"><label>Clinton</label>
+	<input type="checkbox" value="O'Malley, Martin Joseph" class="renderBox" onchange="candidateProcessor();justChecked(this.value);"><label>O'Malley</label>
+	<input type="checkbox" value="Sanders, Bernard" class="renderBox" onchange="candidateProcessor();justChecked(this.value);"><label>Sanders</label>
+	<input type="checkbox" value="Webb, James Henry Jr." class="renderBox" onchange="candidateProcessor();justChecked(this.value);"><label>Webb</label>
+	<input type="checkbox" value="Lessig, Lawrence" class="renderBox" onchange="candidateProcessor();justChecked(this.value);"><label>Lessig</label>
+	</fieldset>
+	
+	<fieldset id="greenBoxes" class="boxes">
+	<h3>Green Party</h3>
+	<input type="checkbox" value="Stein, Jill" class="renderBox" onchange="candidateProcessor();justChecked(this.value);"><label>Stein</label>
+	</fieldset>
+	
+	<fieldset id="libertarianBoxes" class="boxes">
+	<h3>Libertarian Party</h3>
+	<input type="checkbox" value="Johnson, Gary" class="renderBox" onchange="candidateProcessor();justChecked(this.value);"><label>Johnson</label>
+	</fieldset>
+	</div>
+	<fieldset id="partiesBoxes" class="boxes">
+	<h3>Parties</h3>
+	<input type="checkbox" value="Republican Party" class="partyBox" onchange="candidateProcessor();justChecked(this.value);"><label>Republican Party</label>
+	<input type="checkbox" value="Democratic Party" class="partyBox" onchange="candidateProcessor();justChecked(this.value);"><label>Democratic Party</label>
+	</fieldset>
+
+	<fieldset>
+	<div id="filterContainer">
+		<select id="filterSelect" onchange="candidateProcessor();filterChanged(this.value);">
+			<option value="Total">Totals</option>
+			<option value="['Advertising']">Advertising</option>
+			<option value="['Travel']">Travel</option>
+			<option value="['Consulting']">Consulting</option>
+			<option value="['IT']">IT</option>
+			<option value="['Staff']">Staff</option>
+			<option value="['Facilities']">Facilities</option>
+			<option value="['Misc']">Miscellaneous</option>
+		</select>
+		<input type="button" value='Reset' onchange="resetBoxes();">
+	</div>
+	<input type="checkbox" id="features" onchange="featuresRender(this);"><label>Features</label>
+	</fieldset>
+	
+	<!-- VIZ DIV-->
+	<div id="mainChart">
+	</div>
+	
+	<!-- BOTTOM CANVAS -->
+	<div id="pievis_container"></div>
+	
+	<!-- DETAILS -->
+	<p id="details">&nbsp;</p>
+
+	<script>
+
+		// Initialize
+		initVis();
+
+	</script>
+</body>
+</html>
