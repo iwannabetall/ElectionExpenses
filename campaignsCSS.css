@@ -1,0 +1,126 @@
+body {
+	font: 1em sans-serif;
+}
+
+h1 {
+	margin: 0 0 .2em 0;
+}
+
+h3 {
+	font-size: .9em;
+	margin: .2em .2em .2em 0;
+}
+
+boxesContainer {
+	display; flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+}
+
+#details {
+	margin: 0 0 0 2.2em;
+}
+
+/* Style information for axis labels */
+/* from Prof. Gotz */
+.axis-label {
+	font-family: sans-serif;
+	font-size: 12px;
+}
+
+/* Style information for axis lines and tick marks */
+/* from Prof. Gotz */
+.axis path,
+.axis line {
+	fill: none;
+	stroke: black;
+	shape-rendering: crispEdges;
+}
+
+fieldset {
+	border-radius: 5px;
+	padding: .3em;
+	margin: 0 0 .5em 0;
+	display: inline-block;
+}
+
+p {
+	margin: 0;
+}
+
+input {
+	margin: 0;
+	padding: 0 0 0 0;
+	cursor: pointer;
+}
+
+label {
+	padding: 2px;
+	cursor: pointer;
+	font-size: .9em;
+}
+
+.spendLabels {
+	font-size: .9em;
+}
+
+.axisButtonText {
+	font-size: .7em;
+	fill: #fff;
+	cursor: pointer;
+}
+
+.axisButtons {
+	cursor: pointer;
+	fill: black;
+}
+
+#boxesContainer label {
+	margin: 0 8px 0 0;
+}
+
+.axis text {
+	font-family: sans-serif;
+	font-size: 11px;
+}
+
+.spendLine {
+  fill: none;
+}
+
+.spendLine:hover {
+	stroke-width: 5;
+}
+
+#details {
+	font-size: 2em;
+}
+
+.legend {
+    font-size: 12px;
+ }
+rect {
+    stroke-width: 2;
+}
+
+.text {
+    font-size: 12px;
+  }
+
+path.slice{
+	stroke-width:2px;
+}
+
+polyline{
+	opacity: .3;
+	stroke: black;
+	stroke-width: 2px;
+	fill: none;
+}
+
+.labelValue
+{
+	font-size: 60%;
+	opacity: .5;
+	
+}
