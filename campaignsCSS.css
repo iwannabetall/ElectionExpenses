@@ -49,13 +49,17 @@ p {
 }
 
 input {
-	margin: 0;
+	margin: 0 .2em 0 .4em;
 	padding: 0 0 0 0;
 	cursor: pointer;
 }
-
+/*
+#boxesContainer input[type="checkbox"] {
+	display: none;
+}
+*/
 label {
-	padding: 2px;
+	padding: 0 0 0 0;
 	cursor: pointer;
 	font-size: .9em;
 }
@@ -79,6 +83,16 @@ label {
 	margin: 0 8px 0 0;
 }
 
+#bottom_canvas_container {
+	display: flex;
+	flex-direction: row;
+}
+
+#pievis_container {
+	display: flex;
+	flex-direction: column;
+}
+
 .axis text {
 	font-family: sans-serif;
 	font-size: 11px;
@@ -90,10 +104,6 @@ label {
 
 .spendLine:hover {
 	stroke-width: 5;
-}
-
-#details {
-	font-size: 2em;
 }
 
 .legend {
@@ -123,4 +133,37 @@ polyline{
 	font-size: 60%;
 	opacity: .5;
 	
+}
+
+
+.d3-tip:after {
+  box-sizing: border-box;
+  display: inline;
+  width: 100%;
+  line-height: 1;
+  color: black;
+  content: "\25BC";
+  position: absolute;
+  text-align: center;
+  opacity: .5;
+}
+
+.d3-tip.n:after {
+  margin: -2px 0 0 0;
+  top: 100%;
+  left: 0;
+}
+
+.d3-tip {
+	padding: 6px;
+	color: #fff;
+	background: black;
+	font-size: .9em;
+	border-radius: 5px;
+}
+
+#extraOptions {
+	display: flex;
+	flex-direction: row;
+	margin: 0 0 0 220px;
 }
