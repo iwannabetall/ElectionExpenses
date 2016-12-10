@@ -3,6 +3,7 @@ var height = 500;
 var width = 1000;
 var margin = 40;
 
+var GenElectCand = ["Hillary Clinton", "Jill Stein", "Donald Trump", "Gary Johnson", "Evan McMullin"]
 // Date range and parser
 var startDate = new Date(2015,1,1);
 var endDate = new Date(2016,12,1);
@@ -37,7 +38,7 @@ var svg,
 
 //initial variables
 //var boxedpieheight = 150;
-var boxedpiewidth = 800;
+var boxedpiewidth = 850;
 var boxedpiemargin = 40;
 
 function initVis() {
@@ -134,8 +135,8 @@ function initVis() {
 
 	//X Axis Selectors
 	svg.append("rect")
-		.attr("x", width - margin - 106)
-		.attr("y", height - margin + 25)
+		.attr("x", 197)
+		.attr("y", 8)
 		.attr("width", 97)
 		.attr("height", 18)
 		.attr("rx", 5)
@@ -145,8 +146,8 @@ function initVis() {
 		.on("mousedown", function(){changeAxis('campaign');});
 		
 	svg.append("text")
-		.attr("x", width - margin - 58)
-		.attr("y", height - margin + 38)
+		.attr("x", 245)
+		.attr("y", 21)
 		.attr("text-anchor", "middle")
 		.attr("class", "axisButtonText")
 		.text("Whole Campaign")
@@ -154,8 +155,8 @@ function initVis() {
 	
 	//2016 button
 	svg.append("rect")
-		.attr("x", width - margin - 5)
-		.attr("y", height - margin + 25)
+		.attr("x", 300)
+		.attr("y", 8)
 		.attr("width", 40)
 		.attr("height", 18)
 		.attr("rx", 5)
@@ -165,8 +166,8 @@ function initVis() {
 		.on("mousedown", function(){changeAxis('2016');});
 		
 	svg.append("text")
-		.attr("x", width - margin + 14)
-		.attr("y", height - margin + 38)
+		.attr("x", 320)
+		.attr("y", 21)
 		.attr("text-anchor", "middle")
 		.attr("class", "axisButtonText")
 		.text("2016")
@@ -174,8 +175,8 @@ function initVis() {
 		
 	//General Election button
 	svg.append("rect")
-		.attr("x", width - margin - 200)
-		.attr("y", height - margin + 25)
+		.attr("x", 345)
+		.attr("y", 8)
 		.attr("width", 90)
 		.attr("height", 18)
 		.attr("rx", 5)
@@ -185,8 +186,8 @@ function initVis() {
 		.on("mousedown", function(){changeAxis('general');});
 		
 	svg.append("text")
-		.attr("x", width - margin - 155)
-		.attr("y", height - margin + 38)
+		.attr("x", 390)
+		.attr("y", 21)
 		.attr("text-anchor", "middle")
 		.attr("class", "axisButtonText")
 		.text("General Election")
@@ -382,7 +383,7 @@ function BoxedPie(subcat_data, filterOption, selections, Total_Selected_Expend, 
 
 	//scale in y direction 	
 	var CombinedTotalSpend = Total_Selected_Expend.reduce(function(a, b) { return a + b; }, 0); //sum up candidate totals for scaling
-
+	//what proportion of total selected candidates did they represent
 	var CandidateProportion = d3.scaleLinear()
 		.domain([0, CombinedTotalSpend])
 		.range([0, 1]);
@@ -439,14 +440,20 @@ function BoxedPie(subcat_data, filterOption, selections, Total_Selected_Expend, 
         .attr("width", function(d){ return CandBoxProportion(d.value)*600; })
 		.attr('class',function(d) { return d.key;})		
 		.attr('fill', function(d) {return pieColors(d.key);})
-		.style('opacity', 0.5)
+		.attr('id', function(d){ return d.key + "_" + selections;}) 
+		.style('opacity', 0.7)
 		.on("mouseover", function(d){
 			tip.show(d);
 			//bold, magnify the legend text
 			var el = document.getElementById(d.key + "_pielegendtext");
 			el.style.fontWeight = 'bold';
 			el.style.textDecoration = 'underline';
-			el.style.fontSize = '130%';			
+			el.style.fontSize = '115%';	
+
+			var cl = document.getElementsByClassName(d.key);
+			for (i=0; i<cl.length; i++){
+				cl[i].style.opacity = '1';
+			}					
 			//use the method above instead of the one below -- setattribute is less reliable according to Stackoverflow
 			//document.getElementById(d.key + "_pielegendtext").setAttribute("style","fontWeight=normal");
 		}) 
@@ -454,7 +461,13 @@ function BoxedPie(subcat_data, filterOption, selections, Total_Selected_Expend, 
 			var el = document.getElementById(d.key + "_pielegendtext");
 			el.style.fontWeight = 'normal';
 			el.style.textDecoration = 'none';
-			el.style.fontSize = '100%';	}
+			el.style.fontSize = '100%';
+			var cl = document.getElementsByClassName(d.key);
+			for (i=0; i<cl.length; i++){
+				cl[i].style.opacity = '0.7';
+			}					
+		}
+
 		);
     //slice.transition().duration(1000);
 
@@ -474,17 +487,42 @@ function BoxedPie(subcat_data, filterOption, selections, Total_Selected_Expend, 
     		else{ return boxedpieheight/2;}
     	})
     	.attr("text-anchor", "middle")
-    	.style("font-size", "18px")
-    	.style("opacity", 0.5)
+    	.style("font-size", "14px")
+    	//.style("opacity", 0.7)
     	//.style("text-decoration", "underline")
-    	.text(selections);
+    	.text(function(){ 
+    		var M = 1000000; //Million
+    		var K = 1000; //thousands
+    		console.log(CandTot)
+    		if (Math.round(CandTot*10/M)/10 >= 1 && Math.round(CandTot/M) < 10){
+    			//*10 /10 gets the decimal to the 10ths place for some reason
+    			var PrintedAmt = Math.round(CandTot*10/M)/10;
+    			return selections + " ($" + PrintedAmt + "M)";
+    		}
+    		else if (Math.round(CandTot/M) >= 10){
+    			var PrintedAmt = Math.round(CandTot/M);    		
+    			return selections + " ($" + PrintedAmt + "M)";
+    		}
+    		else if (Math.round(CandTot*10/K)/10 < 10){
+			//round to decimal if under 10k
+    			var PrintedAmt = Math.round(CandTot*10/K)/10;
+    			return selections + " ($" + PrintedAmt + "k)"; 
+    		}
+    		else if (Math.round(CandTot*10/K)/10 >= 10){
+			//round to integer if > 10k
+    			var PrintedAmt = Math.round(CandTot/K);
+    			return selections + " ($" + PrintedAmt + "k)"; 
+    		}
+    		else { return selections + " ($" + CandTot + ")"; }
+    	});
+    			
 
     var categorycount = pieColors.domain().length;
 
 	//console.log(pieColors.domain().length);	
 		
 	var legendbox = d3.select('#pievis_legend')
-		.attr('width', 250)
+		.attr('width', 240)
 		.attr('height', 30 * categorycount);
 
 	//console.log(pieColors.domain());
@@ -513,33 +551,108 @@ function BoxedPie(subcat_data, filterOption, selections, Total_Selected_Expend, 
 		.attr("class", "pieLabelText")
 		.attr('id',function(d) { return d + "_pielegendtext";})
 		.on("mouseover", function(d){ 
-			var miniboxes = document.getElementsByClassName(d);
-			for(i=0; i<miniboxes.length; i++){
-				
-				var minih = miniboxes[0].getAttribute("height");
-				var miniw = miniboxes[0].getAttribute("width");
-				var minix = miniboxes[0].getAttribute("x");
-				var miniy = miniboxes[0].getAttribute("y");
-				var minifill = miniboxes[0].getAttribute("fill");
+			//on mouseover of category, ie minibox
+			//miniboxes = categories--individual squares w/in a candidate's plot
+			var miniboxes = document.getElementsByClassName(d);  
+			var svgselect = d3.selectAll('.boxedpie');  //svg canvas
+			//if minibox DNE, then it needs to be 0 or the order gets off 
+			//id of svg canvas 
+			//for each box pie selected
+			var mini_id_cand = []
+			var SVGID_Cand = []
 
-				var highlightbox = miniboxes[i]
-					.append('rect')
-					.attr('height', minih)
-					.attr('width', miniw)
-					.attr('x', minix)
-					.attr('y', miniy)
-				
-				miniboxes[i].setAttribute("style","opacity: 1");	
-			} 
+			//get list of candidates for which we have boxes of a particular category for
+			for (j=0; j<miniboxes.length; j++){					
+				var mini_id = miniboxes[j].getAttribute("id")
+				mini_id_cand.push(mini_id.split("_")[1]) 
+			}
+			//get list of candidates for which we have graphs for 
+			for (i=0; i<svgselect.size(); i++){
+				var SVGID = svgselect.nodes()[i].id
+				SVGID_Cand.push(SVGID.split("_")[0])
+			}
+
+			//if equal number of candidates and category boxes, then every candidate has data for that category
+
+			if (mini_id_cand.length == SVGID_Cand.length)
+			{
+				for (i=0; i<SVGID_Cand.length; i++)
+				{							
+				//get dim of category's box and make another rectangle on top that's a little bigger
+					var minih = miniboxes[i].getAttribute("height");
+					var miniw = miniboxes[i].getAttribute("width");
+					var minix = miniboxes[i].getAttribute("x");
+					var miniy = miniboxes[i].getAttribute("y");
+					var minifill = miniboxes[i].getAttribute("fill");
+	 
+					var highlightbox = d3.select(svgselect.nodes()[i])
+						.append('rect')
+						.attr('height', +minih + 8)
+						.attr('width', +miniw + 8)
+						.attr('x', minix)
+						.attr('y', miniy)
+						.attr('class', 'highlight')
+						.attr('fill', minifill);
+					}
+				}
+			else
+			{
+				//if a minibox DNE, a candidate doesn't have data, then need to set dim to 0 or the order gets off 
+				for (i=0; i<SVGID_Cand.length; i++)
+				{				
+					//check if candidate has a particular category
+					var index = mini_id_cand.indexOf(SVGID_Cand[i])
+
+					if (index >= 0)  //indexOf returns -1 if not in array
+						{
+						var minih = miniboxes[index].getAttribute("height");
+						var miniw = miniboxes[index].getAttribute("width");
+						var minix = miniboxes[index].getAttribute("x");
+						var miniy = miniboxes[index].getAttribute("y");
+						var minifill = miniboxes[index].getAttribute("fill");
+		 
+						var highlightbox = d3.select(svgselect.nodes()[i])
+							.append('rect')
+							.attr('height', +minih + 8)
+							.attr('width', +miniw + 8)
+							.attr('x', minix)
+							.attr('y', miniy)
+							.attr('class', 'highlight')
+							.attr('fill', minifill);
+						}			
+					else 
+					{
+						var minih = 0;
+						var miniw = 0;
+						var minix = 0;
+						var miniy = 0;
+						var minifill = 'black';
+		 
+						var highlightbox = d3.select(svgselect.nodes()[i])
+							.append('rect')
+							.attr('height', +minih)
+							.attr('width', +miniw)
+							.attr('x', minix)
+							.attr('y', miniy)
+							.attr('class', 'highlight')
+							.attr('fill', minifill);	
+							}
+						}
+				}					
+			
 			//document.getElementById(d).setAttribute("height", +document.getElementById(d).getAttribute("height") * 1.2);
 			//document.getElementById(d).setAttribute("height", +document.getElementById(d).getAttribute("width") * 1.2);
 			})
 		.on("mouseout", function(d){ 
 			//get element by id only selects first one -- we want to highlight all when hover over legend
 			var miniboxes = document.getElementsByClassName(d);
+			var selectmini = d3.selectAll('.'+d)
 			for(i=0; i<miniboxes.length; i++){
-				miniboxes[i].setAttribute("style","opacity: 0.5");	
-			}
+				var miniselect = d3.selectAll('.highlight');
+				for (i=0; i<miniselect.size(); i++){
+					miniselect.nodes()[i].remove();
+				}				
+			} 
 			//document.getElementById(d).setAttribute("style","opacity: 0.5");
 			})
         .text(function(d) { return d;});
@@ -547,144 +660,6 @@ function BoxedPie(subcat_data, filterOption, selections, Total_Selected_Expend, 
 	legendText.exit().remove();
 		
 }
-
-function renderPie2(subcat_data, filterOption, selections) {
-	
-	var width = 360;
-    var height = 360;
-    var radius = Math.min(width, height) / 2;
-    var donutWidth = 75;
-    var legendRectSize = 18;  // size of the coloured squares
-	var legendSpacing = 4;
-	
-	var svg = d3.select('#pievis_container')
-      .append('svg')
-      .attr('width', width)
-      .attr('height', height)
-      .attr('id', selections + "_piegraph")
-      .append('g')      
-      .attr('transform', 'translate(' + (width / 2) +
-        ',' + (height / 2) + ')');  //apply transform s.t. center of canvas is origin, so don't need to reposition arcs individually
-
-    //add title
-    svg.append("text")
-    	//.attr("x", (width/2))
-    	.attr("y", 18-height/2)
-    	.attr("text-anchor", "middle")
-    	.style("font-size", "22px")
-    	.style("text-decoration", "underline")
-    	.text(selections);
-
-
-    //can delete all these 
-	svg.append("g")
-		.attr("class", "slices");
-	svg.append("g")
-		.attr("class", "lines");
-
-	var pie = d3.pie()
-		.value(function(d) {
-			return d.value;
-		});
-		//.sort(function(d) { return d.key; });
-
-	var arc = d3.arc()
-		.outerRadius(radius * 0.8)
-		.innerRadius(radius * 0.4);
-
-	var outerArc = d3.arc()
-		.innerRadius(radius * 0.9)
-		.outerRadius(radius * 0.9);
-
-	var legendRectSize = (radius * 0.05);
-	var legendSpacing = radius * 0.02;
-
-	var piedata = pie(subcat_data);
-	//console.log(piedata);
-
-		//initialize tooltips
-	var tip = d3.tip()
-		.attr("class", "d3-tip")
-		.html(function(d) { return (d.data.key)+"<br>"+ "$" + parseInt(d.data.value.toFixed(0)).toLocaleString();});
-		
-	svg.call(tip);
-	//var div = d3.select("#pievis_container").append("div").attr("class", "toolTip");
-
-	svg.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
-
-    //if i move this so slice and .append are diff lines, the tool tip stops working?? 
-    var slice = svg.selectAll('path').data(piedata, function(d) { return d.data.key; });
-	
-    slice.enter()
-		.append('path')
-		.attr('id',function(d) { return d.data.key + "_piepieces";})
-		.attr('d', function(d) {return arc(d);})  //svg has something called d for path 
-		.attr('fill', function(d) {return pieColors(d.data.key);})
-		.on("mouseover", function(d){tip.show(d);}) 
-		.on("mouseout", function(d){tip.hide(d);});;
-
-    slice.transition().duration(1000)
-        .attrTween("d", function(d) {   
-            this._current = this._current || d;  //????wtf is going on here
-            //console.log(this._current)
-            var interpolate = d3.interpolate(this._current, d);
-            this._current = interpolate(0);
-            //console.log(this._current)           
-            return function(t) {
-                return arc(interpolate(t));
-            };
-        });
-    	
-    slice.exit()
-    	.transition()
-    	.style("opacity", 0)
-        .remove();
-
-    var categorycount = pieColors.domain().length;
-
-	//console.log(pieColors.domain().length);	
-		
-	var legendbox = d3.select('#pievis_legend')
-		.attr('width', 250)
-		.attr('height', 30 * categorycount);
-
-	//console.log(pieColors.domain());
-	var legend = d3.select('#pievis_legend').selectAll('.pieLabel').data(pieColors.domain(), function(d){return d;});
-	
-	legend.enter()    
-		.append("rect")
-		.attr("class", "pieLabel")
-		.attr("x", 5)
-		.attr("y", function(d,i){ return 30*i;})
-        .attr('width', 20)  //size of legend box 
-        .attr('height', 20)
-        .attr('id',function(d) { return d.key + "_pielegend";})
-//        .attr('display', flex)
-  //      .attr('flex-direction', column)
-        .style('fill', function(d){return pieColors(d)})
-        .style('stroke', function(d){return pieColors(d)});
-
-	legend.exit().remove();
-		
-	var legendText = d3.select('#pievis_legend').selectAll('.pieLabelText').data(pieColors.domain(), function(d){return d;});
-		
-	legendText.enter().append('text')
-        .attr('x', 30)
-        .attr('y', function(d,i){return (30*i) + 15;})  //?????
-		.attr("class", "pieLabelText")
-        .text(function(d) { return d;});
-	
-	legendText.exit().remove();
-		
-        /*.attr('transform', function(d, i) {
-            var height = legendRectSize + legendSpacing;
-            var offset =  height * pieColors.domain().length / 2;
-            var horz = -3 * legendRectSize;
-            var vert = i * height - offset;
-            return 'translate(' + horz + ',' + vert + ')';
-        });*/
-
-};
 
 function getChecked(){
 
@@ -767,6 +742,7 @@ function filterPartyPieData(selections, filterOption){
 		piepartyData = d3.nest()  
 			.key(function(d){ return d.party;})
 			.key(function(d){ return d.category;})
+			.sortKeys(d3.ascending)
 			.key(function(d){ return d.label;})
 			.rollup(function(leaves){ 
 				var spendSum = d3.sum(leaves, function(g){ 
@@ -823,7 +799,7 @@ function filterChanged(filterOption){
 		if (FilteredPieData == false){
 			selectionswithdata.splice(i,1);  //remove candidate with no data
 			NoDataCount++; 
-			//alert("No data for " + selections[i] + " for " + filterOption);
+			alert("No data for " + selections[i] + " for " + filterOption);
 			//console.log(selectionswithdata.length)
 			//console.log(selectionswithdata)
 			//if if last candidate had no data, remove legend
@@ -945,15 +921,14 @@ function filterForPie(selections, partySelections, filterOption){
 		.key(function(d){ return d.cand_name; }) //key is a function that goes with nest--group data by candidate first so we don't have to 
 		//search thru each row every time we change candidate and can instead pull out a candidate's chunk
 		.key(function(d){return d.category;})
-		.key(function(d){return d.label;})    //pie chart data
 		.sortKeys(d3.ascending)
+		.key(function(d){return d.label;})    //pie chart data
 		.rollup(function(leaves){  //.rollup accesses the tree values/leaves for the purpose of summing up
 			var spendSum = d3.sum(leaves, function(g){ 
 			return g.expend; });
 			return spendSum;
 		})
 		.entries(filteredData);
-	console.log(pieData)
 	//pieData = pieData.concat(piepartyData);
 
 	//if selected totals --calculate totals by summing up each subcategory and creating new JS obj
@@ -978,6 +953,7 @@ function candidateProcessor(){
 	var selections = checked.selections;
 	var partySelections = checked.partySelections;
 	var filterOption = checked.filterOption;
+	var GenElect = document.getElementsByClassName("renderBox")
 	//console.log(selections);
 	
 	/*//weekly or monthly data
@@ -987,7 +963,7 @@ function candidateProcessor(){
 	else{
 		expendData = expendDataMonthly;
 	}*/
-	
+
 	//filterForPie(selections, partySelections, filterOption);
 	if(timeSelection == "general"){
 		expendData = expendDataMonthly.filter(function(d){return parseTime(d.date) > parseTime("25-Jul-16")});
@@ -1197,7 +1173,13 @@ function resetBoxes() {
 
 //switch from percentage to dollars
 function changeAxis(input){
-	
+	var checked = getChecked();
+	var selections = checked.selections;
+	var partySelections = checked.partySelections;
+	var filterOption = checked.filterOption;	
+	var allchecked = selections.concat(partySelections);
+	//var GenElect = document.getElementsByClassName("renderBox")
+
 	if(input == 'dollars'){
 		svg.selectAll("#yaxisLabel").text("Dollars");
 		yAxisSelection = input;
@@ -1234,8 +1216,18 @@ function changeAxis(input){
 		inputChange('shrink');
 	}
 	
+	//remove all box pie charts 
+	//var RemoveTheseBoxpies = document.getElementsByClassName("boxedpie")
+	//why did this work and not the line above??
+	var RemoveTheseBoxpies = d3.selectAll(".boxedpie").nodes() 
+	
+	for (i=0; i<RemoveTheseBoxpies.length;i++){
+		RemoveTheseBoxpies[i].remove()
+	}
+	
 	//rerender the visualization
 	candidateProcessor();
+	filterChanged(filterOption);
 }
 
 function rescaleAxes(newY){
