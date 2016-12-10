@@ -1,9 +1,9 @@
+
 <html>
 <head>
 <title>Campaign Expenditures</title>
 <script src="https://d3js.org/d3.v4.js"></script>
 <script src="expend_data_monthly.json"></script>
-<script src="expend_data_biweekly.json"></script>
 <script src="campaignsJS.js"></script>
 <script src="features.json"></script>
 <script src="candidateSums.json"></script>
@@ -27,7 +27,7 @@
 	<input type="checkbox" id="Rick Santorum" value="Rick Santorum" class="renderBox prelimInput" onchange="candidateProcessor();justChecked(this.value);"><label class="prelimLabel">Santorum</label>
 	<input type="checkbox" id="Ted Cruz" value="Ted Cruz" class="renderBox prelimInput" onchange="candidateProcessor();justChecked(this.value);"><label class="prelimLabel">Cruz</label>
 	<input type="checkbox" id="Bobby Jindal" value="Bobby Jindal" class="renderBox prelimInput" onchange="candidateProcessor();justChecked(this.value);"><label class="prelimLabel">Jindal</label>
-	<input type="checkbox" id="George Pataki" value="Pataki, George E." class="renderBox prelimInput" onchange="candidateProcessor();justChecked(this.value);"><label class="prelimLabel">Pataki</label>
+	<input type="checkbox" id="George Pataki" value="George Pataki" class="renderBox prelimInput" onchange="candidateProcessor();justChecked(this.value);"><label class="prelimLabel">Pataki</label>
 	<input type="checkbox" id="Carly Fiorina" value="Carly Fiorina" class="renderBox prelimInput" onchange="candidateProcessor();justChecked(this.value);"><label class="prelimLabel">Fiorina</label>
 	<input type="checkbox" id="Ben Carson" value="Ben Carson" class="renderBox prelimInput" onchange="candidateProcessor();justChecked(this.value);"><label class="prelimLabel">Carson</label>
 	<input type="checkbox" id="Jim Gilmore" value="Jim Gilmore" class="renderBox prelimInput" onchange="candidateProcessor();justChecked(this.value);"><label class="prelimLabel">Gilmore</label>
@@ -35,7 +35,6 @@
 	<input type="checkbox" id="Rick Perry" value="Rick Perry" class="renderBox prelimInput" onchange="candidateProcessor();justChecked(this.value);"><label class="prelimLabel">Perry</label>
 	<input type="checkbox" id="Jeb Bush" value="Jeb Bush" class="renderBox prelimInput" onchange="candidateProcessor();justChecked(this.value);"><label class="prelimLabel">Bush</label>
 	</fieldset>
-	<div id="subBoxes">
 	<fieldset id="democraticBoxes" class="boxes">
 	<h3>Democratic Party</h3>
 	<input type="checkbox" id="Hillary Clinton" value="Hillary Clinton" class="renderBox" onchange="candidateProcessor();justChecked(this.value);"><label>Clinton</label>
@@ -72,7 +71,7 @@
 			<option value="Advertising">Advertising</option>
 			<option value="Travel">Travel</option>
 			<option value="Consulting">Consulting</option>
-			<option value="IT">IT</option>
+			<option value="Technology">IT</option>
 			<option value="Staff">Staff</option>
 			<option value="Facilities">Facilities</option>
 			<option value="Misc">Miscellaneous</option>
