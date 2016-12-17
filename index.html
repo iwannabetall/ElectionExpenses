@@ -1,0 +1,106 @@
+
+<html>
+<head>
+<title>Campaign Expenditures</title>
+<script src="https://d3js.org/d3.v4.js"></script>
+<script src="expend_data_monthly.json"></script>
+<script src="campaignsJS.js"></script>
+<script src="features.json"></script>
+<script src="candidateSums.json"></script>
+<link rel="stylesheet" type="text/css" href="campaignsCSS.css">
+<script src="https://npmcdn.com/simple-statistics@2.0.0/dist/simple-statistics.min.js"></script>
+<script src="https://ils.unc.edu/~gotz/courses/js/gotz-d3-tip.js"></script>
+
+</head>
+<body>
+<h1>2016 Presidential Campaign Expenditures</h1>
+	<div id="boxesContainer">
+	<fieldset id="republicanBoxes" class="boxes">
+	<h3>Republican Party</h3>
+	<input type="checkbox" id ="Donald Trump" value="Donald Trump" class="renderBox" onchange="candidateProcessor();justChecked(this.value);";><label>Trump</label>
+	<input type="checkbox" id ="John Kasich" value="John Kasich" class="renderBox prelimInput" onchange="candidateProcessor();justChecked(this.value);"><label class="prelimLabel">Kasich</label>
+	<input type="checkbox" id="Marco Rubio" value="Marco Rubio" class="renderBox prelimInput" onchange="candidateProcessor();justChecked(this.value);"><label class="prelimLabel">Rubio</label>
+	<input type="checkbox" id="Scott Walker" value="Scott Walker" class="renderBox prelimInput" onchange="candidateProcessor();justChecked(this.value);"><label class="prelimLabel">Walker</label>
+	<input type="checkbox" id="Mike Huckabee" value="Mike Huckabee" class="renderBox prelimInput" onchange="candidateProcessor();justChecked(this.value);"><label class="prelimLabel">Huckabee</label>
+	<input type="checkbox" id="Lindsey Graham" value="Lindsey Graham" class="renderBox prelimInput" onchange="candidateProcessor();justChecked(this.value);"><label class="prelimLabel">Graham</label>
+	<input type="checkbox" id="Rand Paul" value="Rand Paul" class="renderBox prelimInput" onchange="candidateProcessor();justChecked(this.value);"><label class="prelimLabel">Paul</label>
+	<input type="checkbox" id="Rick Santorum" value="Rick Santorum" class="renderBox prelimInput" onchange="candidateProcessor();justChecked(this.value);"><label class="prelimLabel">Santorum</label>
+	<input type="checkbox" id="Ted Cruz" value="Ted Cruz" class="renderBox prelimInput" onchange="candidateProcessor();justChecked(this.value);"><label class="prelimLabel">Cruz</label>
+	<input type="checkbox" id="Bobby Jindal" value="Bobby Jindal" class="renderBox prelimInput" onchange="candidateProcessor();justChecked(this.value);"><label class="prelimLabel">Jindal</label>
+	<input type="checkbox" id="George Pataki" value="George Pataki" class="renderBox prelimInput" onchange="candidateProcessor();justChecked(this.value);"><label class="prelimLabel">Pataki</label>
+	<input type="checkbox" id="Carly Fiorina" value="Carly Fiorina" class="renderBox prelimInput" onchange="candidateProcessor();justChecked(this.value);"><label class="prelimLabel">Fiorina</label>
+	<input type="checkbox" id="Ben Carson" value="Ben Carson" class="renderBox prelimInput" onchange="candidateProcessor();justChecked(this.value);"><label class="prelimLabel">Carson</label>
+	<input type="checkbox" id="Jim Gilmore" value="Jim Gilmore" class="renderBox prelimInput" onchange="candidateProcessor();justChecked(this.value);"><label class="prelimLabel">Gilmore</label>
+	<input type="checkbox" id="Chris Christie" value="Chris Christie" class="renderBox prelimInput" onchange="candidateProcessor();justChecked(this.value);"><label class="prelimLabel">Christie</label>
+	<input type="checkbox" id="Rick Perry" value="Rick Perry" class="renderBox prelimInput" onchange="candidateProcessor();justChecked(this.value);"><label class="prelimLabel">Perry</label>
+	<input type="checkbox" id="Jeb Bush" value="Jeb Bush" class="renderBox prelimInput" onchange="candidateProcessor();justChecked(this.value);"><label class="prelimLabel">Bush</label>
+	</fieldset>
+	<fieldset id="democraticBoxes" class="boxes">
+	<h3>Democratic Party</h3>
+	<input type="checkbox" id="Hillary Clinton" value="Hillary Clinton" class="renderBox" onchange="candidateProcessor();justChecked(this.value);"><label>Clinton</label>
+	<input type="checkbox" id="Martin O'Malley" value="Martin O'Malley" class="renderBox prelimInput" onchange="candidateProcessor();justChecked(this.value);"><label class="prelimLabel">O'Malley</label>
+	<input type="checkbox" id="Bernie Sanders" value="Bernie Sanders" class="renderBox prelimInput" onchange="candidateProcessor();justChecked(this.value);"><label class="prelimLabel">Sanders</label>
+	<input type="checkbox" id="Jim Webb" value="Jim Webb" class="renderBox prelimInput" onchange="candidateProcessor();justChecked(this.value);"><label class="prelimLabel">Webb</label>
+	<input type="checkbox" id="Lawrence Lessig" value="Lawrence Lessig" class="renderBox prelimInput" onchange="candidateProcessor();justChecked(this.value);"><label class="prelimLabel">Lessig</label>
+	</fieldset>
+	
+	<fieldset id="greenBoxes" class="boxes">
+	<h3>Green Party</h3>
+	<input type="checkbox" id="Jill Stein" value="Jill Stein" class="renderBox" onchange="candidateProcessor();justChecked(this.value);"><label>Stein</label>
+	</fieldset>
+	
+	<fieldset id="libertarianBoxes" class="boxes">
+	<h3>Libertarian Party</h3>
+	<input type="checkbox" id="Gary Johnson" value="Gary Johnson" class="renderBox" onchange="candidateProcessor();justChecked(this.value);"><label>Johnson</label>
+	</fieldset>
+		<fieldset id="IndBoxes" class="boxes">
+	<h3>Independent Party</h3>
+	<input type="checkbox" id="Evan McMullin" value="Evan McMullin" class="renderBox" onchange="candidateProcessor();justChecked(this.value);"><label>McMullin</label>
+	</fieldset>
+	</div>
+	<fieldset id="partiesBoxes" class="boxes prelimLabel">
+	<h3>Parties</h3>
+	<input type="checkbox" id="Republican Party" value="Republican Party" class="partyBox prelimInput" onchange="candidateProcessor();justChecked(this.value);"><label class="prelimLabel">Republican Party</label>
+	<input type="checkbox" id="Democratic Party" value="Democratic Party" class="partyBox prelimInput" onchange="candidateProcessor();justChecked(this.value);"><label class="prelimLabel">Democratic Party</label>
+	</fieldset>
+
+	<div id="extraOptions">
+	<div id="filterContainer">
+		<select id="filterSelect" onchange="candidateProcessor();filterChanged(this.value);">
+			<option value="Total">Totals</option>
+			<option value="Advertising">Advertising</option>
+			<option value="Travel">Travel</option>
+			<option value="Consulting">Consulting</option>
+			<option value="Technology">IT</option>
+			<option value="Staff">Staff</option>
+			<option value="Facilities">Facilities</option>
+			<option value="Misc">Miscellaneous</option>
+			<option value="In-Kind Contribution">In-Kind Contribution</option>
+			<option value="Uncategorized">Uncategorized</option>
+		</select>
+		<input type="button" value='Reset' onclick="resetBoxes();">
+	</div>
+	<input type="checkbox" id="features" onchange="featuresRender(this);"><label>Important Dates</label>
+	</div>
+	
+	<!-- VIZ DIV-->
+	<div id="mainChart">
+	</div>
+	
+	<!-- BOTTOM CANVAS -->
+	<div id="bottom_canvas_container">
+	<svg id="pieVis_legend"></svg>
+	<div id="pievis_container"></div>
+	</div>
+	
+	<!-- DETAILS -->
+	<p id="details">&nbsp;</p>
+
+	<script>
+
+		// Initialize
+		initVis();
+
+	</script>
+</body>
+</html>
