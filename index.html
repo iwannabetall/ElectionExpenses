@@ -1,7 +1,6 @@
 
 <html>
-<head>
-<title>Campaign Expenditures</title>
+<head> <title>Campaign Expenditures</title>
 <script src="https://d3js.org/d3.v4.js"></script>
 <script src="expend_data_monthly.json"></script>
 <script src="campaignsJS.js"></script>
@@ -67,7 +66,7 @@
 	<div id="extraOptions">
 	<div id="filterContainer">
 		<select id="filterSelect" onchange="candidateProcessor();filterChanged(this.value);">
-			<option value="Total">Totals</option>
+			<option value="All">All</option>
 			<option value="Advertising">Advertising</option>
 			<option value="Travel">Travel</option>
 			<option value="Consulting">Consulting</option>
@@ -102,5 +101,16 @@
 		initVis();
 
 	</script>
+	<script>
+	      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+	      ga('create', 'UA-89556275-1', 'auto');
+	      ga('send', 'pageview');
+
+	  </script>
+	  
 </body>
 </html>
