@@ -476,7 +476,8 @@ function BoxedPie(subcat_data, filterOption, selections, Total_Selected_Expend, 
     	.style("opacity", 0)
         .remove();
 
-    //label plot w/candidate name--add text after appending rectangles
+    //label plot w/candidate name--add text after appending 
+
     // or mouseover legend will block out name when opacity is 1
     svg.append("text")
     	.attr("x", 700)
@@ -745,8 +746,11 @@ function filterPartyPieData(selections, filterOption){
 			.sortKeys(d3.ascending)
 			.key(function(d){ return d.label;})
 			.rollup(function(leaves){ 
-				var spendSum = d3.sum(leaves, function(g){ 
-				return g.expend; });
+				var spendSum = d3.sum(leaves, function(g)
+				{ 
+				return g.expend; 
+				});
+			
 				return spendSum;
 			})
 			.entries(partyFilter);	
@@ -916,6 +920,7 @@ function filterForPie(selections, partySelections, filterOption){
 	
 	var pieData = [];
 	//console.log(pieData.length);
+	//using data log of every expense, take the selection and find the average expenses per sub category per label for selected candidate
 	//**GET DATA FOR PIE CHART (PARTY LEVEL STUFF ABOVE)
 	pieData = d3.nest()  //takes json data and nests it by groups 
 		.key(function(d){ return d.cand_name; }) //key is a function that goes with nest--group data by candidate first so we don't have to 
